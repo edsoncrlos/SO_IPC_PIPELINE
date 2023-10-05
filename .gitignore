@@ -1,0 +1,8 @@
+# ignore c/c++ binary files
+*.out
+*.o
+*.obj
+*.a
+*.so
+*.exe
+*.dll
