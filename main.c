@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <string.h>
+#include <sys/wait.h>
 
 #define TRUE 1
 #define BUFFER 20
@@ -40,16 +41,17 @@ void producer(int fd[]) {
 
 	for (int i = 0; i < 13; i++) {
 		char msg[20];
-		snprintf(msg, sizeof(msg), "Mensagem %d", i+1);
+		snprintf(msg, sizeof(msg), "Mensagem %d\n", i+1);
 
 		if (write(fd[1],  msg, strlen(msg)) == -1) {
 			perror("write error in pipe");
 			exit(EXIT_FAILURE);
 		}
-		sleep(1);
+		// sleep(1);
     }
 
 	close(fd[1]);
+	wait(NULL); // wait child process
 	exit(EXIT_SUCCESS);
 }
 
@@ -68,8 +70,9 @@ void consumer(int fd[]) {
 		if (bytes_read == 0) {
 			break;
 		}
-		printf("%.*s\n",  bytes_read,  receive_str);
-		
+
+		printf("%.*s",  bytes_read,  receive_str);
+		sleep(1);
 	}
 
 	close(fd[0]);
